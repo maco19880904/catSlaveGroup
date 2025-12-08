@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8">
+  <title>選醜投票專區</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      background: #f5f5f5;
+    }
+    h1 {
+      text-align: center;
+      margin: 20px 0;
+    }
+    .gallery {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+      gap: 12px;
+      padding: 12px;
+      box-sizing: border-box;
+    }
+    .item {
+      background: #fff;
+      border-radius: 6px;
+      overflow: hidden;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.08);
+      cursor: pointer;
+      transition: transform 0.1s ease, box-shadow 0.1s ease;
+      padding: 8px;
+      box-sizing: border-box;
+    }
+    .item:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+    }
+    .item img {
+      width: 100%;
+      height: auto;      /* 保留完整比例，不裁切 */
+      display: block;
+    }
+    .label {
+      margin-top: 4px;
+      font-size: 14px;
+      text-align: center;
+      color: #333;
+    }
+
+    /* 大圖預覽視窗 */
+    .lightbox {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.8);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 999;
+    }
+    .lightbox.open {
+      display: flex;
+    }
+    .lightbox-content {
+      position: relative;
+      max-width: 95vw;
+      max-height: 95vh;
+    }
+    .lightbox-img {
+      max-width: 100%;
+      max-height: 100%;
+      border-radius: 4px;
+      background: #000;
+    }
+    .lightbox-close {
+      position: absolute;
+      top: -40px;
+      right: 0;
+      color: #fff;
+      font-size: 20px;
+      cursor: pointer;
+      padding: 6px 10px;
+      background: rgba(0,0,0,0.6);
+      border-radius: 4px;
+    }
+  </style>
+</head>
+<body>
+
+<h1>選醜投票專區</h1>
+<div style="text-align:center; margin-bottom: 20px;">
+  <a href="https://docs.google.com/forms/d/1lbkVL5XRmk1SwEVidDAclv4bilz5tIDy1lacXRHKzJI/edit" 
+     target="_blank" 
+     style="font-size: 20px; text-decoration: none; color: #0077ff; font-weight: bold;">
+    ✅ 投票通道
+  </a>
+  <a href="https://maco19880904.github.io/catSlaveGroup/buti.html"
+    target="_blank"
+    style="font-size: 20px; text-decoration: none; color: #ff8800; font-weight: bold; margin: 0 12px;">
+    ⭐ 選美投票專區
+  </a>
+
+  <a href="https://maco19880904.github.io/catSlaveGroup/xmas.html"
+    target="_blank"
+    style="font-size: 20px; text-decoration: none; color: #22aa22; font-weight: bold; margin: 0 12px;">
+    ⭐ 聖誕投票專區
+  </a>
+</div>
+<div class="gallery" id="gallery">
+<div class="item"><img src="https://cdn.discordapp.com/attachments/1446462729144635505/1447401986067796018/image.png?ex=69377da4&is=69362c24&hm=877b55a833f21821dca32c9a7f095d9183b7513ac5dc160cee292d868bd52a1d&" alt="image 1"><div class="label">NO.1</div></div>
+<div class="item"><img src="https://cdn.discordapp.com/attachments/1446462729144635505/1447402037716455474/image.png?ex=69377db1&is=69362c31&hm=9c503533fd7c80cef8d8738a352708ec958460b0e335b5de45ae6435cf08a154&" alt="image 2"><div class="label">NO.2</div></div>
+<div class="item"><img src="https://cdn.discordapp.com/attachments/1446462729144635505/1447402133165965312/image.png?ex=69377dc7&is=69362c47&hm=839582ce3b5a003ab1448777fea43f8dec3b90751af22d7ccb9d4a3f59b52f9b&" alt="image 3"><div class="label">NO.3</div></div>
+<div class="item"><img src="https://cdn.discordapp.com/attachments/1446462729144635505/1447402171372146854/image.png?ex=69377dd1&is=69362c51&hm=bd4b20fe4155c8aba9d10b576cfe21958d5c4200feff8fc952ca04aca8a5a907&" alt="image 4"><div class="label">NO.4</div></div>
+<div class="item"><img src="https://cdn.discordapp.com/attachments/1446462729144635505/1447402224765374705/image.png?ex=69377ddd&is=69362c5d&hm=0ac5f7c14fb9593884cb49203289ea5789f128c316e951b196c8577f3f618352&" alt="image 5"><div class="label">NO.5</div></div>
+<div class="item"><img src="https://cdn.discordapp.com/attachments/1446462729144635505/1447402265232150538/image.png?ex=69377de7&is=69362c67&hm=04db08760d497f8cd94000372db96a3c4188586dfab3533ce364eb44d632ab6e&" alt="image 6"><div class="label">NO.6</div></div>
+<div class="item"><img src="https://cdn.discordapp.com/attachments/1446462729144635505/1447402303408705536/image.png?ex=69377df0&is=69362c70&hm=66f992c4348161a6ac878a6aac06c7dac988c0d2cc10ad524fb1ff12bca2822c&" alt="image 7"><div class="label">NO.7</div></div>
+<div class="item"><img src="https://cdn.discordapp.com/attachments/1446462729144635505/1447402372610396251/image.png?ex=69377e01&is=69362c81&hm=2b7fd7b6d9661299c514c7ef1bdc823052cd1e3949f23aa547aea4a7541a92bb&" alt="image 8"><div class="label">NO.8</div></div>
+<div class="item"><img src="https://cdn.discordapp.com/attachments/1446462729144635505/1447402430491922452/image.png?ex=69377e0e&is=69362c8e&hm=61a8281ba6c7ffda247d5f7b4b84d6c75ec44cb651e1591726d6046bbcaca9a2&" alt="image 9"><div class="label">NO.9</div></div>
+<div class="item"><img src="https://cdn.discordapp.com/attachments/1446462729144635505/1447402507449008158/image.png?ex=69377e21&is=69362ca1&hm=1f6bd19467e2e89e056b822b71682e268bcb30bba944e0716edcd06527b5f0fd&" alt="image 10"><div class="label">NO.10</div></div>
+
+<div class="item"><img src="https://cdn.discordapp.com/attachments/1446462729144635505/1447402661841469582/image.png?ex=69377e46&is=69362cc6&hm=c202e3b5f2df0c9f14ab564939a243f296d615d2853bd1474a676e8eb6ff3d3b&" alt="image 11"><div class="label">NO.11</div></div>
+<div class="item"><img src="https://cdn.discordapp.com/attachments/1446462729144635505/1447402712819040326/image.png?ex=69377e52&is=69362cd2&hm=94f29b7e98c3182b67f994d7750465e2ce709fd7714aee57a0d0b8ba87f03901&" alt="image 12"><div class="label">NO.12</div></div>
+<div class="item"><img src="https://cdn.discordapp.com/attachments/1446462729144635505/1447402751448580126/image.png?ex=69377e5b&is=69362cdb&hm=87b60961aefd086ba1d761204c896b16d93b25e7405cebd930d96af4f44f2abd&" alt="image 13"><div class="label">NO.13</div></div>
+<div class="item"><img src="https://cdn.discordapp.com/attachments/1446462729144635505/1447402786751905923/image.png?ex=69377e63&is=69362ce3&hm=9bb4b73fe01787f7e70727512fe7dd172cecb261ce400fd9cf1d4e46e21e85ad&" alt="image 14"><div class="label">NO.14</div></div>
+<div class="item"><img src="https://cdn.discordapp.com/attachments/1446462729144635505/1447402830288912488/image.png?ex=69377e6e&is=69362cee&hm=891921a1c98c7ebc5e132a005cc0e46689720da080b132bf7514f26272783b48&" alt="image 15"><div class="label">NO.15</div></div>
+<div class="item"><img src="https://cdn.discordapp.com/attachments/1446462729144635505/1447402868142243870/image.png?ex=69377e77&is=69362cf7&hm=68dbba7e4a3967b363e14525e01e474245aa8dd11921e08275a98ec86c6a91fe&" alt="image 16"><div class="label">NO.16</div></div>
+<div class="item"><img src="https://cdn.discordapp.com/attachments/1446462729144635505/1447402929807032401/image.png?ex=69377e85&is=69362d05&hm=f3af49e9dd4aa5db683ed680c79fffc4223e36b24d4587dd6abca3e8d8aa3108&" alt="image 17"><div class="label">NO.17</div></div>
+<div class="item"><img src="https://cdn.discordapp.com/attachments/1446462729144635505/1447403001781157969/image.png?ex=69377e97&is=69362d17&hm=c7a3e7a34f1c9eb69e63c2e7dda7e23f3af9f0af7ad115c9d8ce00f4860a7518&" alt="image 18"><div class="label">NO.18</div></div>
+<div class="item"><img src="https://cdn.discordapp.com/attachments/1446462729144635505/1447403033263738910/image.png?ex=69377e9e&is=69362d1e&hm=9ae8aa26e9ba660abb2625a54c2c9af71b93e2d244eaaa726a80f8f31ae328ca&" alt="image 19"><div class="label">NO.19</div></div>
+<div class="item"><img src="https://cdn.discordapp.com/attachments/1446462729144635505/1447403077614309578/image.png?ex=69377ea9&is=69362d29&hm=2ec0218ba5337c760c13cdd0ec39e6775b74d257d6044686ba94189d543b0bd7&" alt="image 20"><div class="label">NO.20</div></div>
+
+<div class="item"><img src="https://cdn.discordapp.com/attachments/1446462729144635505/1447403108182523904/image.png?ex=69377eb0&is=69362d30&hm=2c693130b3a3c58f5aaa6e60fb32892594c01bb583392f55b7e30329bba01fc2&" alt="image 21"><div class="label">NO.21</div></div>
+<div class="item"><img src="https://cdn.discordapp.com/attachments/1446462729144635505/1447403145834795200/image.png?ex=69377eb9&is=69362d39&hm=f72818309cc02fda968e419c5033be002748f2d9fc6b2d9df69cc1a187f4860e&" alt="image 22"><div class="label">NO.22</div></div>
+<div class="item"><img src="https://cdn.discordapp.com/attachments/1446462729144635505/1447403423510171769/image.png?ex=69377efb&is=69362d7b&hm=2460da4c7a75f399f60a3ef05e48f4c3f5e94d427a63c2707a11a4ea613ca3b0&" alt="image 23"><div class="label">NO.23</div></div>
+<div class="item"><img src="https://cdn.discordapp.com/attachments/1446462729144635505/1447403464975057018/image.png?ex=69377f05&is=69362d85&hm=dd3ba2746f743cd03f9237519150a310fda57c545a54fd120e6033171648e53b&" alt="image 24"><div class="label">NO.24</div></div>
+<div class="item"><img src="https://cdn.discordapp.com/attachments/1446462729144635505/1447403539960828104/image.png?ex=69377f17&is=69362d97&hm=404765254d12b422e8dd961184611660b7e38d8261e4263df9fa7c1163f8d951&" alt="image 25"><div class="label">NO.25</div></div>
+<div class="item"><img src="https://cdn.discordapp.com/attachments/1446462729144635505/1447403578590367754/image.png?ex=69377f20&is=69362da0&hm=3a7ccd88c8c0aeaa07ea071e268f1b4140746a210fc9eb477d5b5ec81c08eb2b&" alt="image 26"><div class="label">NO.26</div></div>
+<div class="item"><img src="https://cdn.discordapp.com/attachments/1446462729144635505/1447403634177478677/image.png?ex=69377f2d&is=69362dad&hm=0c68a954f5ed35632189180a8b39319f173e09452403020f7ce950d20b4cf535&" alt="image 27"><div class="label">NO.27</div></div>
+<div class="item"><img src="https://cdn.discordapp.com/attachments/1446462729144635505/1447403746278510713/image.png?ex=69377f48&is=69362dc8&hm=2786ba8d5b320224fdb8f59692e44b265785b762387cf1d29ee22019beba44d9&" alt="image 28"><div class="label">NO.28</div></div>
+<div class="item"><img src="https://cdn.discordapp.com/attachments/1446462729144635505/1447403787764371576/image.png?ex=69377f52&is=69362dd2&hm=b6f698569e8e1d7819832745f355620d6d58f8b04d4bd9e8ce0360a301efc8a3&" alt="image 29"><div class="label">NO.29</div></div>
+<div class="item"><img src="https://cdn.discordapp.com/attachments/1446462729144635505/1447403829418266654/image.png?ex=69377f5c&is=69362ddc&hm=b776286cc0b539136786451179ca181fae2a3d48e82f224e5d079be509673534&" alt="image 30"><div class="label">NO.30</div></div>
+
+<div class="item"><img src="https://cdn.discordapp.com/attachments/1446462729144635505/1447403889627234414/image.png?ex=69377f6a&is=69362dea&hm=e705134c79f986ae132e0ce7d7c395e26aad34dafd99698e063c0ce94f93f642&" alt="image 31"><div class="label">NO.31</div></div>
+<div class="item"><img src="https://cdn.discordapp.com/attachments/1446462729144635505/1447403952298659940/image.png?ex=69377f79&is=69362df9&hm=c6312217205830a61812de42d7802b1949e0399776fdfeedfb60e5ae55ab661d&" alt="image 32"><div class="label">NO.32</div></div>
+<div class="item"><img src="https://cdn.discordapp.com/attachments/1446462729144635505/1447403989997195385/image.png?ex=69377f82&is=69362e02&hm=af4f7c929f6e6ebb03732bb0568f1f899a4d341fa0932cdfb3e5bf6d695d274a&" alt="image 33"><div class="label">NO.33</div></div>
+<div class="item"><img src="https://cdn.discordapp.com/attachments/1446462729144635505/1447404058112557178/image.png?ex=69377f92&is=69362e12&hm=24858f1c8d73387ebdad042f92285b5b2b42614d2a209c8b7e956171f0acb593&" alt="image 34"><div class="label">NO.34</div></div>
+<div class="item"><img src="https://cdn.discordapp.com/attachments/1446462729144635505/1447404123728121876/image.png?ex=69377fa2&is=69362e22&hm=2c8d9a2cca430a4e0e84fc48b825203c37942b064b9cdb40ba2c4d1e270ac592&" alt="image 35"><div class="label">NO.35</div></div>
+<div class="item"><img src="https://cdn.discordapp.com/attachments/1446462729144635505/1447404164840689674/image.png?ex=69377fac&is=69362e2c&hm=edc39bf42178b2130b82aefff1d54770188759b258a4832e99dc06337fb3ed85&" alt="image 36"><div class="label">NO.36</div></div>
+<div class="item"><img src="https://cdn.discordapp.com/attachments/1446462729144635505/1447404307765919945/image.png?ex=69377fce&is=69362e4e&hm=daafe3de734a02d27ee2479dc9c2e1fed4d65830199cf5d496b02e4d67e38d96&" alt="image 37"><div class="label">NO.37</div></div>
+
+<div class="item"><img src="https://cdn.discordapp.com/attachments/1446462729144635505/1447404340435357716/image.png?ex=69377fd6&is=69362e56&hm=f1420b72abffc91d21fc87e97d3a77fa3502a08f939ee697c984aa55f08df6b2&" alt="image 38"><div class="label">NO.38</div></div>
+
+<div class="item"><img src="https://cdn.discordapp.com/attachments/1446462729144635505/1447404389424697454/image.png?ex=69377fe1&is=69362e61&hm=23fa92f4fbad2d33105edc28decc18a08349c0c1cd0ec37b4cd850648902c87c&" alt="image 39"><div class="label">NO.39</div></div>
+
+<div class="item"><img src="https://cdn.discordapp.com/attachments/1446462729144635505/1447404426485563433/image.png?ex=69377fea&is=69362e6a&hm=90e0c85f3be2ad26e7bd77835824c9a145b4cf63d4d97e37f69ab14b2fc99a5f&" alt="image 40"><div class="label">NO.40</div></div>
+
+<div class="item"><img src="https://cdn.discordapp.com/attachments/1446462729144635505/1447404489215836261/image.png?ex=69377ff9&is=69362e79&hm=7272f4adeee2c7b7af1d15957f07af80f2bc9f0b1f7c1ebe91087c09a8eb5db5&" alt="image 41"><div class="label">NO.41</div></div>
+
+<div class="item"><img src="https://cdn.discordapp.com/attachments/1446462729144635505/1447404539480113162/image.png?ex=69378005&is=69362e85&hm=fb5d0dfddb61d580f09a60820638a227192034ee1afaef94691f405a9e03158f&" alt="image 42"><div class="label">NO.42</div></div>
+
+<div class="item"><img src="https://cdn.discordapp.com/attachments/1446462729144635505/1447404605381021799/image.png?ex=69378015&is=69362e95&hm=998c8ee43a025365a033231dce8f7e8e516e9c29f275f2e1a2f705e66236aaf7&" alt="image 43"><div class="label">NO.43</div></div>
+
+<div class="item"><img src="https://cdn.discordapp.com/attachments/1446462729144635505/1447404891839529091/image.png?ex=69378059&is=69362ed9&hm=2e27244dfe5ec61ecc4ff6e744da3e407319a14715fbd31da2d7648c61547af9&" alt="image 44"><div class="label">NO.44</div></div>
+
+<div class="item"><img src="https://cdn.discordapp.com/attachments/1446462729144635505/1447404922500022323/image.png?ex=69378061&is=69362ee1&hm=04aca65e4a5d6ab3ea0c3e8818ad6fbc21e16050435cee5d0973f913e92d7c9e&" alt="image 45"><div class="label">NO.45</div></div>
+
+<div class="item"><img src="https://cdn.discordapp.com/attachments/1446462729144635505/1447404945002336428/image.png?ex=69378066&is=69362ee6&hm=bfe95c410dec7d15ff895aa23b2c9450dd4859654209fa4551f3f77dfbecde9a&" alt="image 46"><div class="label">NO.46</div></div>
+
+<div class="item"><img src="https://cdn.discordapp.com/attachments/1446462729144635505/1447404998517330072/image.png?ex=69378073&is=69362ef3&hm=b8ac81630b5b7baaf00f1ee04fef7a38ce54e7fb48d884ae24a8f4be90d67bec&" alt="image 47"><div class="label">NO.47</div></div>
+
+<div class="item"><img src="https://cdn.discordapp.com/attachments/1446462729144635505/1447405072639197298/image.png?ex=69378084&is=69362f04&hm=8118396dc4506cc0f1ab0309d41e82866d13ec7ee7a5a5e818e4c4b1ffb469a0&" alt="image 48"><div class="label">NO.48</div></div>
+
+<div class="item"><img src="https://cdn.discordapp.com/attachments/1446462729144635505/1447405108659884162/image.png?ex=6937808d&is=69362f0d&hm=cca94eda839d802ba6b5e046d00ffba33d069aa30c43a9f29b4c08a3965b7944&" alt="image 49"><div class="label">NO.49</div></div>
+
+<div class="item"><img src="https://cdn.discordapp.com/attachments/1446462729144635505/1447405189115154542/image.png?ex=693780a0&is=69362f20&hm=ec0efc47131b6553f9d70add8e14f47e3bc92f680000c853c044cc4d4bb9dac7&" alt="image 50"><div class="label">NO.50</div></div>
+
+<div class="item"><img src="https://cdn.discordapp.com/attachments/1446462729144635505/1447405230164803760/image.png?ex=693780aa&is=69362f2a&hm=66b7eaac50848abe06d01d1c922e10d515c5ac1cce45030d2ac022406714b07d&" alt="image 51"><div class="label">NO.51</div></div>
+
+<div class="item"><img src="https://cdn.discordapp.com/attachments/1446462729144635505/1447405277295939624/image.png?ex=693780b5&is=69362f35&hm=445123b0ad76cf824048f75b4eb46a87351edf184f83fffe5b6dbc47c20bd3d7&" alt="image 52"><div class="label">NO.52</div></div>
+
+<div class="item"><img src="https://cdn.discordapp.com/attachments/1446462729144635505/1447405333117927525/image.png?ex=693780c2&is=69362f42&hm=9c7234bd6dfbc9db22c5b835640695adebb39c32715319928e10bc988c17f77c&" alt="image 53"><div class="label">NO.53</div></div>
+
+<div class="item"><img src="https://cdn.discordapp.com/attachments/1446462729144635505/1447405376860455033/image.png?ex=693780cd&is=69362f4d&hm=2ffc721c5536def97df280c83edbdce9763665381f7d9c94efb3e2db8a3bc8f5&" alt="image 54"><div class="label">NO.54</div></div>
+<!-- 大圖預覽 -->
+<div class="lightbox" id="lightbox">
+  <div class="lightbox-content">
+    <span class="lightbox-close" id="lightboxClose">關閉 ✕</span>
+    <img id="lightboxImg" class="lightbox-img" src="" alt="">
+  </div>
+</div>
+
+<script>
+  const gallery = document.getElementById('gallery');
+  const lightbox = document.getElementById('lightbox');
+  const lightboxImg = document.getElementById('lightboxImg');
+  const lightboxClose = document.getElementById('lightboxClose');
+
+  // 點縮圖打開大圖
+  gallery.addEventListener('click', function (e) {
+    const target = e.target;
+    if (target.tagName.toLowerCase() === 'img') {
+      lightboxImg.src = target.src;
+      lightbox.classList.add('open');
+    }
+  });
+
+  // 關閉大圖：按關閉或點背景
+  lightboxClose.addEventListener('click', function () {
+    lightbox.classList.remove('open');
+    lightboxImg.src = '';
+  });
+
+  lightbox.addEventListener('click', function (e) {
+    if (e.target === lightbox) {
+      lightbox.classList.remove('open');
+      lightboxImg.src = '';
+    }
+  });
+
+  // 按 ESC 關閉
+  document.addEventListener('keydown', function (e) {
+    if (e.key === 'Escape' && lightbox.classList.contains('open')) {
+      lightbox.classList.remove('open');
+      lightboxImg.src = '';
+    }
+  });
+</script>
+
+</body>
+</html>
