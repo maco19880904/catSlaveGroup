@@ -1,0 +1,401 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8">
+  <title>圖片瀏覽頁面</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      background: #f5f5f5;
+    }
+    h1 {
+      text-align: center;
+      margin: 20px 0;
+    }
+    .gallery {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+      gap: 12px;
+      padding: 12px;
+      box-sizing: border-box;
+    }
+    .item {
+      background: #fff;
+      border-radius: 6px;
+      overflow: hidden;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.08);
+      cursor: pointer;
+      transition: transform 0.1s ease, box-shadow 0.1s ease;
+      padding: 8px;
+      box-sizing: border-box;
+    }
+    .item:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+    }
+    .item img {
+      width: 100%;
+      height: auto;      /* 保留完整比例，不裁切 */
+      display: block;
+    }
+    .label {
+      margin-top: 4px;
+      font-size: 14px;
+      text-align: center;
+      color: #333;
+    }
+
+    /* 大圖預覽視窗 */
+    .lightbox {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.8);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 999;
+    }
+    .lightbox.open {
+      display: flex;
+    }
+    .lightbox-content {
+      position: relative;
+      max-width: 95vw;
+      max-height: 95vh;
+    }
+    .lightbox-img {
+      max-width: 100%;
+      max-height: 100%;
+      border-radius: 4px;
+      background: #000;
+    }
+    .lightbox-close {
+      position: absolute;
+      top: -40px;
+      right: 0;
+      color: #fff;
+      font-size: 20px;
+      cursor: pointer;
+      padding: 6px 10px;
+      background: rgba(0,0,0,0.6);
+      border-radius: 4px;
+    }
+  </style>
+</head>
+<body>
+
+<h1>我的圖片瀏覽頁面</h1>
+<div style="text-align:center; margin-bottom: 20px;">
+  <a href="https://docs.google.com/forms/d/1t30j5vea38aZrareUR7i-KIPwTyJqxiIlBYcRaZ6XS0/edit" 
+     target="_blank" 
+     style="font-size: 20px; text-decoration: none; color: #0077ff; font-weight: bold;">
+    ✅ 投票通道
+  </a>
+</div>
+<div class="gallery" id="gallery">
+
+  <div class="item">
+    <img src="https://cdn.discordapp.com/attachments/1443686849074958416/1447296098468106433/image.png?ex=69371b07&is=6935c987&hm=2ccd2196e6805b8e8b5f3a7097a2bf630dc8a219dda2a8c5178a2a5e4e176adf&" alt="image 1">
+    <div class="label">圖片 1</div>
+  </div>
+
+  <div class="item">
+    <img src="https://cdn.discordapp.com/attachments/1443686849074958416/1447296244413108255/image.png?ex=69371b2a&is=6935c9aa&hm=c1158d30172a0a57cc9c6fe15261e04678ce89d9855efdc53d57891a7ef3e97f&" alt="image 2">
+    <div class="label">圖片 2</div>
+  </div>
+
+  <div class="item">
+    <img src="https://cdn.discordapp.com/attachments/1443686849074958416/1447315081020047571/image.png?ex=69372cb5&is=6935db35&hm=81cc9e922e81adf096ede3d6ad0e35df25f57e918996b08c6d17fdacc11b1896&" alt="image 3">
+    <div class="label">圖片 3</div>
+  </div>
+
+  <div class="item">
+    <img src="https://cdn.discordapp.com/attachments/1443686849074958416/1447296777467203754/image.png?ex=69371ba9&is=6935ca29&hm=bdb85dc5e39f61d7f686385d215a5751f7f9571f56fa8283fb62efd1eaa8dc8d&" alt="image 4">
+    <div class="label">圖片 4</div>
+  </div>
+
+  <div class="item">
+    <img src="https://cdn.discordapp.com/attachments/1443686849074958416/1447296914448977931/image.png?ex=69371bc9&is=6935ca49&hm=c286e93cd62214a7085a0eccfd23bb8f3b1c0be59c6892122aeeccdfc010c07a&" alt="image 5">
+    <div class="label">圖片 5</div>
+  </div>
+
+  <div class="item">
+    <img src="https://cdn.discordapp.com/attachments/1443686849074958416/1447297174369996881/image.png?ex=69371c07&is=6935ca87&hm=3789b33fa3689b2bdeba2c77dee27d004bc762a1222ce66a59a201d6c5de5188&" alt="image 6">
+    <div class="label">圖片 6</div>
+  </div>
+
+  <div class="item">
+    <img src="https://cdn.discordapp.com/attachments/1443686849074958416/1447297266351210729/image.png?ex=69371c1d&is=6935ca9d&hm=2f9cb743b55d5488cbc24b4acd2baf5ac25ddf9baf4110a699d20770a06bb91c&" alt="image 7">
+    <div class="label">圖片 7</div>
+  </div>
+
+  <div class="item">
+    <img src="https://cdn.discordapp.com/attachments/1443686849074958416/1447297411419603210/image.png?ex=69371c40&is=6935cac0&hm=42d64572ab4ee8db3e9e8f9969aedec3409bcf1b611f440572440276e537c609&" alt="image 8">
+    <div class="label">圖片 8</div>
+  </div>
+
+  <div class="item">
+    <img src="https://cdn.discordapp.com/attachments/1443686849074958416/1447297502012510390/image.png?ex=69371c55&is=6935cad5&hm=1823ed6d87fb042062c9682eeaae0512787a81fe2e1abd44510b381b6686617b&" alt="image 9">
+    <div class="label">圖片 9</div>
+  </div>
+
+  <div class="item">
+    <img src="https://cdn.discordapp.com/attachments/1443686849074958416/1447297730321059901/image.png?ex=69371c8c&is=6935cb0c&hm=e96fafde729f5bc93332aa48694d2cdaf31a64ae42f1836d19929c77ad367e4d&" alt="image 10">
+    <div class="label">圖片 10</div>
+  </div>
+
+  <div class="item">
+    <img src="https://cdn.discordapp.com/attachments/1443686849074958416/1447297812391002204/image.png?ex=69371c9f&is=6935cb1f&hm=9dfe9b61fab179adc35ed5f234e67e4a233bafa331596bafd93ec32f935bafd3&" alt="image 11">
+    <div class="label">圖片 11</div>
+  </div>
+
+  <div class="item">
+    <img src="https://cdn.discordapp.com/attachments/1443686849074958416/1447297961196519549/image.png?ex=69371cc3&is=6935cb43&hm=1b4930660c3e08f40868a1e6bf45dfc8b1b4bfc61b225c128ea2909433833e21&" alt="image 12">
+    <div class="label">圖片 12</div>
+  </div>
+
+  <div class="item">
+    <img src="https://cdn.discordapp.com/attachments/1443686849074958416/1447298140385575103/image.png?ex=69371cee&is=6935cb6e&hm=7f85bb913a00b4f2d3cdd18292f08124a136cd928f8c777cb7b8f1601e98b0d3&" alt="image 13">
+    <div class="label">圖片 13</div>
+  </div>
+
+  <div class="item">
+    <img src="https://cdn.discordapp.com/attachments/1443686849074958416/1447298490819678269/image.png?ex=69371d41&is=6935cbc1&hm=1e0043e11f5df3376644903ffde487699c9a3a5cbfb44048631331b2e6f5ab79&" alt="image 14">
+    <div class="label">圖片 14</div>
+  </div>
+
+  <div class="item">
+    <img src="https://cdn.discordapp.com/attachments/1443686849074958416/1447298579625541682/image.png?ex=69371d56&is=6935cbd6&hm=07d8d00f36b7cd63451b6521eb2078df0270b62f6661db5fcef3d622e023bd58&" alt="image 15">
+    <div class="label">圖片 15</div>
+  </div>
+
+  <div class="item">
+    <img src="https://cdn.discordapp.com/attachments/1443686849074958416/1447298702770180299/image.png?ex=69371d74&is=6935cbf4&hm=269c8a746eeca4b2d970dfbf23e58130f6c0b8b04111c38f936374c01e39f704&" alt="image 16">
+    <div class="label">圖片 16</div>
+  </div>
+
+  <div class="item">
+    <img src="https://cdn.discordapp.com/attachments/1443686849074958416/1447298832986673273/image.png?ex=69371d93&is=6935cc13&hm=69d9a479d71060fb74ddc5ccbb0f93a9907791df435789853ef420635da440fc&" alt="image 17">
+    <div class="label">圖片 17</div>
+  </div>
+
+  <div class="item">
+    <img src="https://cdn.discordapp.com/attachments/1443686849074958416/1447299749580378316/image.png?ex=69371e6d&is=6935cced&hm=b8fbe45f4c53abecc57e087522493bb4f11ab344d48f1121f9c01c00443e30f3&" alt="image 18">
+    <div class="label">圖片 18</div>
+  </div>
+
+  <div class="item">
+    <img src="https://cdn.discordapp.com/attachments/1443686849074958416/1447302128531013743/image.png?ex=693720a5&is=6935cf25&hm=02e83c6f2dd5b4a4568f1bd0e25d63304cb51cf706a2c0eb243553155a1eba5f&" alt="image 19">
+    <div class="label">圖片 19</div>
+  </div>
+
+  <div class="item">
+    <img src="https://cdn.discordapp.com/attachments/1443686849074958416/1447302492789411962/image.png?ex=693720fb&is=6935cf7b&hm=ede8c54c9c4f81d626eaac186367472039f391be93a48f71c419e2e89de4a968&" alt="image 20">
+    <div class="label">圖片 20</div>
+  </div>
+
+  <div class="item">
+    <img src="https://cdn.discordapp.com/attachments/1443686849074958416/1447302689384955994/image.png?ex=6937212a&is=6935cfaa&hm=effefe6ae55d39283e7028510e29b14903eb19ac98e7318557353969931cc65c&" alt="image 21">
+    <div class="label">圖片 21</div>
+  </div>
+
+  <div class="item">
+    <img src="https://cdn.discordapp.com/attachments/1443686849074958416/1447303247164604436/image.png?ex=693721af&is=6935d02f&hm=494d257aa5930ab6ac771ad6e0997c7c27bca79666695f83b25e13e7ddcbc54a&" alt="image 22">
+    <div class="label">圖片 22</div>
+  </div>
+
+  <div class="item">
+    <img src="https://cdn.discordapp.com/attachments/1443686849074958416/1447303482846482672/image.png?ex=693721e7&is=6935d067&hm=d9a3c33e22d4d5af4cbc3f8e8296b129dd76b83aed4a24ecf0fcab67c18ff90c&" alt="image 23">
+    <div class="label">圖片 23</div>
+  </div>
+
+  <div class="item">
+    <img src="https://cdn.discordapp.com/attachments/1443686849074958416/1447303594150723757/image.png?ex=69372202&is=6935d082&hm=07d508afbb363d207a666bab093b6d6dc978ac29095d48e6441518feb8be6413&" alt="image 24">
+    <div class="label">圖片 24</div>
+  </div>
+
+  <div class="item">
+    <img src="https://cdn.discordapp.com/attachments/1443686849074958416/1447303849176989756/image.png?ex=6937223f&is=6935d0bf&hm=b47916353b64d8d3767b7b9b6558182dd9972d1d63a88a2c789e464bfe381063&" alt="image 25">
+    <div class="label">圖片 25</div>
+  </div>
+
+  <div class="item">
+    <img src="https://cdn.discordapp.com/attachments/1443686849074958416/1447306198721232979/image.png?ex=6937246f&is=6935d2ef&hm=5276a4176df51d2fde294ed68b179242fbe68c3fb8138b49558641adf7e30e84&" alt="image 26">
+    <div class="label">圖片 26</div>
+  </div>
+
+  <div class="item">
+    <img src="https://cdn.discordapp.com/attachments/1443686849074958416/1447306346423783434/image.png?ex=69372492&is=6935d312&hm=8b929adfb4f053b9d57d1d13a3682d3f038a3c03206f8e0c8f84ebad2bd59faf&" alt="image 27">
+    <div class="label">圖片 27</div>
+  </div>
+
+  <div class="item">
+    <img src="https://cdn.discordapp.com/attachments/1443686849074958416/1447306654306537482/image.png?ex=693724dc&is=6935d35c&hm=11862077b8f42ac9e29d9c4807732a2c05813d53e15b7d0ae54f3b9ab48ddd62&" alt="image 28">
+    <div class="label">圖片 28</div>
+  </div>
+
+  <div class="item">
+    <img src="https://cdn.discordapp.com/attachments/1443686849074958416/1447306930505781258/image.png?ex=6937251d&is=6935d39d&hm=42737fd3ebe2b5c18a1616a453c57dd86ba24515607bce12bec8b50488f5a476&" alt="image 29">
+    <div class="label">圖片 29</div>
+  </div>
+
+  <div class="item">
+    <img src="https://cdn.discordapp.com/attachments/1443686849074958416/1447307436833636412/image.png?ex=69372596&is=6935d416&hm=985123a67ff24c74368d3459d04c077fd181269329d40e157c84d640e060796a&" alt="image 30">
+    <div class="label">圖片 30</div>
+  </div>
+
+  <div class="item">
+    <img src="https://cdn.discordapp.com/attachments/1443686849074958416/1447307525761536271/image.png?ex=693725ab&is=6935d42b&hm=2ac3dd63d1d3739fc2c225f7e4ef3e45b86f200f369a7ccb30a704ecd984bf3e&" alt="image 31">
+    <div class="label">圖片 31</div>
+  </div>
+
+  <div class="item">
+    <img src="https://cdn.discordapp.com/attachments/1443686849074958416/1447307685254140066/image.png?ex=693725d1&is=6935d451&hm=1b688d97545761138a7dd6836c105cf33c0c2be87da9e3e60f53bee8f3f0a34f&" alt="image 32">
+    <div class="label">圖片 32</div>
+  </div>
+
+  <div class="item">
+    <img src="https://cdn.discordapp.com/attachments/1443686849074958416/1447307871724503061/image.png?ex=693725fe&is=6935d47e&hm=67888e79fdbdc6d6ce45518d38b37969e8948d101b1997fb5e10cc34e1405aef&" alt="image 33">
+    <div class="label">圖片 33</div>
+  </div>
+
+  <div class="item">
+    <img src="https://cdn.discordapp.com/attachments/1443686849074958416/1447308044680564807/image.png?ex=69372627&is=6935d4a7&hm=55eebffb5cc473f5f3cd944c55114cc47a6326a91ba1da947ffcce28fbff3c49&" alt="image 34">
+    <div class="label">圖片 34</div>
+  </div>
+
+  <div class="item">
+    <img src="https://cdn.discordapp.com/attachments/1443686849074958416/1447308240491642940/image.png?ex=69372656&is=6935d4d6&hm=07c9d580e6647ee1641cef23a244363c5dfb02d80064261ae348466dc9ca8607&" alt="image 35">
+    <div class="label">圖片 35</div>
+  </div>
+
+  <div class="item">
+    <img src="https://cdn.discordapp.com/attachments/1443686849074958416/1447308505915719893/image.png?ex=69372695&is=6935d515&hm=cfaaef2abd648575fb6533562926c1fb834558c4d82f0ad4eae1f86eca7a674d&" alt="image 36">
+    <div class="label">圖片 36</div>
+  </div>
+
+  <div class="item">
+    <img src="https://cdn.discordapp.com/attachments/1443686849074958416/1447309975083814952/image.png?ex=693727f3&is=6935d673&hm=6bc3e22b13e21ae6c43cf55191f5e55d5d30ed5f60532582674d1acabcb21008&" alt="image 37">
+    <div class="label">圖片 37</div>
+  </div>
+
+  <div class="item">
+    <img src="https://cdn.discordapp.com/attachments/1443686849074958416/1447310157326585918/image.png?ex=6937281f&is=6935d69f&hm=56ffd627f1100dba454549983ab21775e1164bf20593273a23561f73a4f5208d&" alt="image 38">
+    <div class="label">圖片 38</div>
+  </div>
+
+  <div class="item">
+    <img src="https://cdn.discordapp.com/attachments/1443686849074958416/1447311205936140432/image.png?ex=69372919&is=6935d799&hm=b2dd2c32e45341a214fbf095f266abd69be5f33f0ce2bd8ea215fbc7c6509be4&" alt="image 39">
+    <div class="label">圖片 39</div>
+  </div>
+
+  <div class="item">
+    <img src="https://cdn.discordapp.com/attachments/1443686849074958416/1447311511935651860/image.png?ex=69372962&is=6935d7e2&hm=673c9d1a1c9b16a0b41a2cec690a031f7ec471e8c56b0927c16af79f9d8f3984&" alt="image 40">
+    <div class="label">圖片 40</div>
+  </div>
+
+  <div class="item">
+    <img src="https://cdn.discordapp.com/attachments/1443686849074958416/1447311912835747930/image.png?ex=693729c1&is=6935d841&hm=d4b862be54337933ce8879ee4710a4465e462ca51ca5ed5ec3e81e81a85d6922&" alt="image 41">
+    <div class="label">圖片 41</div>
+  </div>
+
+  <div class="item">
+    <img src="https://cdn.discordapp.com/attachments/1443686849074958416/1447312001909915709/image.png?ex=693729d7&is=6935d857&hm=c267b0d26575a85cce801c1e5501bf8370e16ca3bf1de35a1ea1b27e60dc2ee2&" alt="image 42">
+    <div class="label">圖片 42</div>
+  </div>
+
+  <div class="item">
+    <img src="https://cdn.discordapp.com/attachments/1443686849074958416/1447312131023437835/image.png?ex=693729f5&is=6935d875&hm=fda013ebf34b6e4f6839397eaa362be228fa46c654c777e472a319e5a4d2bccb&" alt="image 43">
+    <div class="label">圖片 43</div>
+  </div>
+
+  <div class="item">
+    <img src="https://cdn.discordapp.com/attachments/1443686849074958416/1447312240654028820/image.png?ex=69372a0f&is=6935d88f&hm=3cc8bc3fe7edb58e4054b2bbb16fd0708725fa7cb5e30aa75083ac31ae11c937&" alt="image 44">
+    <div class="label">圖片 44</div>
+  </div>
+
+  <div class="item">
+    <img src="https://cdn.discordapp.com/attachments/1443686849074958416/1447312506711441439/image.png?ex=69372a4f&is=6935d8cf&hm=4dc4d091bdcb0ca1e765d786d9009c95ae16549dbf49a95420047463b51b9e2d&" alt="image 45">
+    <div class="label">圖片 45</div>
+  </div>
+
+  <div class="item">
+    <img src="https://cdn.discordapp.com/attachments/1443686849074958416/1447313017569022113/image.png?ex=69372ac9&is=6935d949&hm=a5d50dfee62e943e503bfeaa28185234884b2b477d145254e0e339bd376e2d76&" alt="image 46">
+    <div class="label">圖片 46</div>
+  </div>
+
+  <div class="item">
+    <img src="https://cdn.discordapp.com/attachments/1443686849074958416/1447313614963867749/image.png?ex=69372b57&is=6935d9d7&hm=f129cf3885c13b0a59121f450b32f58e44398c69ee28bfa99c409e54f031e6ed&" alt="image 47">
+    <div class="label">圖片 47</div>
+  </div>
+
+  <div class="item">
+    <img src="https://cdn.discordapp.com/attachments/1443686849074958416/1447313990744145920/image.png?ex=69372bb1&is=6935da31&hm=904b53336640e71790d0359c7b623194ee88d07d6ce13e9f0095ce63ca3d6028&" alt="image 48">
+    <div class="label">圖片 48</div>
+  </div>
+
+  <div class="item">
+    <img src="https://cdn.discordapp.com/attachments/1443686849074958416/1447314085313122405/image.png?ex=69372bc7&is=6935da47&hm=da6289eb4fe8673878a5bea81d3720f142fe7c3d2d38df5a1f7ca4aa10567676&" alt="image 49">
+    <div class="label">圖片 49</div>
+  </div>
+
+  <div class="item">
+    <img src="https://cdn.discordapp.com/attachments/1443686849074958416/1447314397516267632/image.png?ex=69372c12&is=6935da92&hm=2953e354c0d4e19e76c3ddce0e94791e723d27c0b951a3faf2087621d03a6be3&" alt="image 50">
+    <div class="label">圖片 50</div>
+  </div>
+
+  <div class="item">
+    <img src="https://cdn.discordapp.com/attachments/1443686849074958416/1447314667562336386/image.png?ex=69372c52&is=6935dad2&hm=d21d3b8573afd8aacb22e21e2ad55a5a401bd8843fc66fb83deaa16b75d757fb&" alt="image 51">
+    <div class="label">NO.51</div>
+  </div>
+</div>
+
+<!-- 大圖預覽 -->
+<div class="lightbox" id="lightbox">
+  <div class="lightbox-content">
+    <span class="lightbox-close" id="lightboxClose">關閉 ✕</span>
+    <img id="lightboxImg" class="lightbox-img" src="" alt="">
+  </div>
+</div>
+
+<script>
+  const gallery = document.getElementById('gallery');
+  const lightbox = document.getElementById('lightbox');
+  const lightboxImg = document.getElementById('lightboxImg');
+  const lightboxClose = document.getElementById('lightboxClose');
+
+  // 點縮圖打開大圖
+  gallery.addEventListener('click', function (e) {
+    const target = e.target;
+    if (target.tagName.toLowerCase() === 'img') {
+      lightboxImg.src = target.src;
+      lightbox.classList.add('open');
+    }
+  });
+
+  // 關閉大圖：按關閉或點背景
+  lightboxClose.addEventListener('click', function () {
+    lightbox.classList.remove('open');
+    lightboxImg.src = '';
+  });
+
+  lightbox.addEventListener('click', function (e) {
+    if (e.target === lightbox) {
+      lightbox.classList.remove('open');
+      lightboxImg.src = '';
+    }
+  });
+
+  // 按 ESC 關閉
+  document.addEventListener('keydown', function (e) {
+    if (e.key === 'Escape' && lightbox.classList.contains('open')) {
+      lightbox.classList.remove('open');
+      lightboxImg.src = '';
+    }
+  });
+</script>
+
+</body>
+</html>
