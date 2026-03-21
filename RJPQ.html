@@ -434,6 +434,14 @@
             <div class="panel">
                 <div class="nickname-box" id="nick-box">
                     <input type="text" id="nick-input" maxlength="10" placeholder="輸入暱稱 (中英數)...">
+					<select id="colorSelect">
+						<option value="0" style="color: hsl(0, 70%, 45%);">紅</option>
+						<option value="60" style="color: hsl(60, 70%, 45%);">黃</option>
+						<option value="120" style="color: hsl(120, 70%, 45%);">綠</option>
+						<option value="180" style="color: hsl(180, 70%, 45%);">青</option>
+						<option value="240" style="color: hsl(240, 70%, 45%);">藍</option>
+						<option value="300" style="color: hsl(300, 70%, 45%);">紫</option>
+					</select>
                     <div class="action-group">
                         <button class="ms-btn" onclick="saveNick()" id="btn-save-nick">確定暱稱</button>
                         <button class="ms-btn" onclick="editNick()" id="btn-edit-nick"
@@ -501,10 +509,11 @@
         // === 狀態變數 ===
         let peer = null;
         let myNick = "";
+        let myColor = "0"; // 用户选择的颜色 (HSL的H值)
         let isHost = false;
         let fullMyId = "";
-        let connections = {}; // { peerId: { conn, nick } }
-        let mapData = Array(10).fill().map(() => Array(4).fill().map(() => ({ v: 0, owner: null })));
+        let connections = {}; // { peerId: { conn, nick, color } }
+        let mapData = Array(10).fill().map(() => Array(4).fill().map(() => ({ v: 0, owner: null, ownerColor: null })));
 
         const els = {
             load: document.getElementById('loading'),
@@ -519,6 +528,7 @@
             pList: document.getElementById('participant-list'),
             btnReset: document.getElementById('btn-reset-all'),
             nickInput: document.getElementById('nick-input'),
+            colorSelect: document.getElementById('colorSelect'),
             btnSaveNick: document.getElementById('btn-save-nick'),
             btnEditNick: document.getElementById('btn-edit-nick'),
             btnLeave: document.getElementById('btn-leave'),
@@ -546,13 +556,8 @@
             els.loadMsg.innerText = msg;
         };
 
-        const getNickColor = (nick) => {
-            let hash = 0;
-            for (let i = 0; i < nick.length; i++) {
-                hash = nick.charCodeAt(i) + ((hash << 5) - hash);
-            }
-            const h = Math.abs(hash % 360);
-            return `hsl(${h}, 70%, 45%)`;
+        const getColorFromHSL = (hslValue) => {
+            return `hsl(${hslValue}, 70%, 45%)`;
         };
 
         // === 暱稱與控制項 ===
@@ -566,8 +571,10 @@
             }
 
             myNick = val;
+            myColor = els.colorSelect.value;
             els.nickInput.value = myNick;
             els.nickInput.disabled = true;
+            els.colorSelect.disabled = true;
             els.btnSaveNick.style.display = "none";
             els.btnEditNick.style.display = "inline-flex";
             els.nickInput.style.backgroundColor = "#eee";
@@ -581,6 +588,7 @@
             if (!confirm("修改暱稱將斷開目前連線，確定嗎？")) return;
             leaveRoom();
             els.nickInput.disabled = false;
+            els.colorSelect.disabled = false;
             els.nickInput.style.backgroundColor = "#fff";
             els.btnSaveNick.style.display = "inline-flex";
             els.btnEditNick.style.display = "none";
@@ -593,6 +601,8 @@
             }
             isHost = false;
             fullMyId = "";
+            myNick = "";
+            myColor = "0";
             connections = {};
             clearLocal();
 
@@ -669,7 +679,7 @@
                 setupConnection(conn);
                 conn.on('open', () => {
                     log(`已連接房主，申請加入...`, "info");
-                    conn.send({ type: 'JOIN', nick: myNick });
+                    conn.send({ type: 'JOIN', nick: myNick, color: myColor });
                 });
                 setTimeout(() => {
                     if (els.load.style.display === 'flex' && !Object.values(connections).length) {
@@ -711,7 +721,7 @@
                     setTimeout(() => conn.close(), 500);
                     return;
                 }
-                connections[conn.peer] = { conn, nick: data.nick };
+                connections[conn.peer] = { conn, nick: data.nick, color: data.color };
                 log(`歡迎成員: ${data.nick}`, "success");
                 const fullList = getFullNickList();
                 broadcast({ type: 'NICK_LIST', users: fullList });
@@ -721,7 +731,7 @@
             } else if (data.type === 'WELCOME') {
                 setLoading(false);
                 isHost = false;
-                connections[conn.peer] = { conn, nick: "房主" };
+                connections[conn.peer] = { conn, nick: "房主", color: "240" };
                 mapData = JSON.parse(JSON.stringify(data.state));
                 for (let f = 0; f < 10; f++) for (let d = 0; d < 4; d++) updateDoorUI(f, d);
                 log(`進入房間成功！`, "success");
@@ -739,11 +749,13 @@
             } else if (data.type === 'SYNC') {
                 mapData[data.f][data.d].v = data.v;
                 mapData[data.f][data.d].owner = data.owner;
+                mapData[data.f][data.d].ownerColor = data.ownerColor;
                 if (data.v === 1) {
                     for (let d = 0; d < 4; d++) {
                         if (d !== data.d && mapData[data.f][d].owner === data.owner) {
                             mapData[data.f][d].v = 0;
                             mapData[data.f][d].owner = null;
+                            mapData[data.f][d].ownerColor = null;
                             updateDoorUI(data.f, d);
                         }
                     }
@@ -757,7 +769,7 @@
         }
 
         function getFullNickList() {
-            return [{ nick: myNick, isHost: true }, ...Object.values(connections).map(c => ({ nick: c.nick, isHost: false }))];
+            return [{ nick: myNick, isHost: true, color: myColor }, ...Object.values(connections).map(c => ({ nick: c.nick, isHost: false, color: c.color }))];
         }
 
         function broadcast(msg, exclude = null) {
@@ -767,9 +779,9 @@
         }
 
         function refreshParticipantList() {
-            const tags = [{ nick: myNick, isHost }];
+            const tags = [{ nick: myNick, isHost, color: myColor }];
             Object.values(connections).forEach(c => {
-                if (c.conn && c.conn.open) tags.push({ nick: c.nick, isHost: false });
+                if (c.conn && c.conn.open) tags.push({ nick: c.nick, isHost: false, color: c.color });
             });
             renderNameTags(tags);
         }
@@ -782,7 +794,7 @@
             els.pList.innerHTML = "";
             tags.forEach(t => {
                 const tag = document.createElement("span");
-                const color = getNickColor(t.nick);
+                const color = getColorFromHSL(t.color);
                 tag.className = `participant-tag ${t.isHost ? 'host' : ''}`;
                 tag.style.borderColor = color;
                 tag.style.color = color;
@@ -796,6 +808,7 @@
                 if (mapData[f][d].owner === nick) {
                     mapData[f][d].v = 0;
                     mapData[f][d].owner = null;
+                    mapData[f][d].ownerColor = null;
                     updateDoorUI(f, d);
                 }
             }
@@ -861,6 +874,7 @@
                 if (item.owner === myNick || isHost) {
                     item.v = 0;
                     item.owner = null;
+                    item.ownerColor = null;
                 } else {
                     log("無法取消他人的標記。", "warn");
                     return;
@@ -872,18 +886,20 @@
                 }
                 for (let i = 0; i < 4; i++) {
                     if (mapData[f][i].owner === myNick) {
-                        const oldMsg = { type: 'SYNC', f, d: i, v: 0, owner: null };
+                        const oldMsg = { type: 'SYNC', f, d: i, v: 0, owner: null, ownerColor: null };
                         syncMsg(oldMsg);
                         mapData[f][i].v = 0;
                         mapData[f][i].owner = null;
+                        mapData[f][i].ownerColor = null;
                         updateDoorUI(f, i);
                     }
                 }
                 item.v = 1;
                 item.owner = myNick;
+                item.ownerColor = myColor;
             }
             updateDoorUI(f, d);
-            syncMsg({ type: 'SYNC', f, d, v: item.v, owner: item.owner });
+            syncMsg({ type: 'SYNC', f, d, v: item.v, owner: item.owner, ownerColor: item.ownerColor });
         }
 
         function syncMsg(msg) {
@@ -910,19 +926,22 @@
             const tag = el.querySelector('.door-tag');
             const item = mapData[f][d];
             if (item.v === 1) {
-                const color = getNickColor(item.owner);
+                const color = getColorFromHSL(item.ownerColor);
                 el.classList.add('state-pass');
                 el.classList.remove('state-error');
                 el.style.setProperty('--marker-color', color);
 				tag.style.setProperty('font-size', '20px');
 				if(item.owner == myNick) {
 					tag.style.setProperty('color', 'red');
+				} else {
+					tag.style.setProperty('color', 'white');
 				}
                 tag.innerText = item.owner;
             } else {
                 el.classList.remove('state-pass');
                 el.style.removeProperty('--marker-color');
                 tag.innerText = "";
+                tag.style.removeProperty('color');
             }
         }
 
