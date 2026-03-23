@@ -121,6 +121,17 @@
             min-width: 100px;
         }
 
+        #colorSelect {
+            width: 42px;
+            min-width: 42px;
+            height: 36px;
+            padding: 2px;
+            border: 2px solid #ccc;
+            border-radius: 4px;
+            background: #fff;
+            cursor: pointer;
+        }
+
         .action-group {
             display: flex;
             gap: 6px;
@@ -434,14 +445,7 @@
             <div class="panel">
                 <div class="nickname-box" id="nick-box">
                     <input type="text" id="nick-input" maxlength="10" placeholder="輸入暱稱 (中英數)...">
-					<select id="colorSelect">
-						<option value="0" style="color: hsl(0, 70%, 45%);">紅</option>
-						<option value="60" style="color: hsl(60, 70%, 45%);">黃</option>
-						<option value="120" style="color: hsl(120, 70%, 45%);">綠</option>
-						<option value="180" style="color: hsl(180, 70%, 45%);">青</option>
-						<option value="240" style="color: hsl(240, 70%, 45%);">藍</option>
-						<option value="300" style="color: hsl(300, 70%, 45%);">紫</option>
-					</select>
+                    <input type="color" id="colorSelect" value="#ff4d4d" title="選擇顏色">
                     <div class="action-group">
                         <button class="ms-btn" onclick="saveNick()" id="btn-save-nick">確定暱稱</button>
                         <button class="ms-btn" onclick="editNick()" id="btn-edit-nick"
@@ -509,7 +513,7 @@
         // === 狀態變數 ===
         let peer = null;
         let myNick = "";
-        let myColor = "0"; // 用户选择的颜色 (HSL的H值)
+        let myColor = "#ff4d4d";
         let isHost = false;
         let fullMyId = "";
         let connections = {}; // { peerId: { conn, nick, color } }
@@ -556,8 +560,17 @@
             els.loadMsg.innerText = msg;
         };
 
-        const getColorFromHSL = (hslValue) => {
-            return `hsl(${hslValue}, 70%, 45%)`;
+        const getColorFromHSL = (colorValue) => {
+            if (!colorValue) return "#336699";
+
+            const value = String(colorValue).trim();
+
+            // 相容舊版傳過來的 HSL 色相值（0/60/120...）
+            if (/^\d+$/.test(value)) {
+                return `hsl(${value}, 70%, 45%)`;
+            }
+
+            return value;
         };
 
         // === 暱稱與控制項 ===
@@ -574,7 +587,6 @@
             myColor = els.colorSelect.value;
             els.nickInput.value = myNick;
             els.nickInput.disabled = true;
-            els.colorSelect.disabled = true;
             els.btnSaveNick.style.display = "none";
             els.btnEditNick.style.display = "inline-flex";
             els.nickInput.style.backgroundColor = "#eee";
@@ -602,7 +614,8 @@
             isHost = false;
             fullMyId = "";
             myNick = "";
-            myColor = "0";
+            myColor = "#ff4d4d";
+            els.colorSelect.value = myColor;
             connections = {};
             clearLocal();
 
@@ -622,6 +635,40 @@
             window.location.hash = "";
             history.replaceState("", document.title, window.location.pathname);
             location.reload();
+        }
+
+        function applyUserColor(nick, color) {
+            for (let f = 0; f < 10; f++) for (let d = 0; d < 4; d++) {
+                if (mapData[f][d].owner === nick && mapData[f][d].v === 1) {
+                    mapData[f][d].ownerColor = color;
+                    updateDoorUI(f, d);
+                }
+            }
+        }
+
+        function updateMyColorLive() {
+            const picked = els.colorSelect.value;
+            if (picked === myColor) return;
+
+            myColor = picked;
+            if (!myNick) return;
+
+            applyUserColor(myNick, myColor);
+
+            if (isHost) {
+                refreshParticipantList();
+                broadcast({ type: 'PROFILE_UPDATE', nick: myNick, color: myColor });
+                broadcast({ type: 'NICK_LIST', users: getFullNickList() });
+            } else {
+                const hostConn = Object.values(connections).find(c => c.nick === "房主");
+                if (hostConn && hostConn.conn.open) {
+                    hostConn.conn.send({ type: 'PROFILE_UPDATE', color: myColor });
+                } else {
+                    refreshParticipantList();
+                }
+            }
+
+            log("顏色已更新並同步。", "info");
         }
 
         // === PeerJS 核心邏輯 ===
@@ -731,7 +778,7 @@
             } else if (data.type === 'WELCOME') {
                 setLoading(false);
                 isHost = false;
-                connections[conn.peer] = { conn, nick: "房主", color: "240" };
+                connections[conn.peer] = { conn, nick: "房主", color: "#3366ff" };
                 mapData = JSON.parse(JSON.stringify(data.state));
                 for (let f = 0; f < 10; f++) for (let d = 0; d < 4; d++) updateDoorUI(f, d);
                 log(`進入房間成功！`, "success");
@@ -742,6 +789,20 @@
                 updateParticipantListFromWelcome(data.users);
             } else if (data.type === 'NICK_LIST') {
                 updateParticipantListFromWelcome(data.users);
+            } else if (data.type === 'PROFILE_UPDATE') {
+                if (isHost) {
+                    const user = connections[conn.peer];
+                    if (!user) return;
+
+                    user.color = data.color;
+                    applyUserColor(user.nick, data.color);
+                    refreshParticipantList();
+
+                    broadcast({ type: 'PROFILE_UPDATE', nick: user.nick, color: data.color }, conn);
+                    broadcast({ type: 'NICK_LIST', users: getFullNickList() });
+                } else {
+                    applyUserColor(data.nick, data.color);
+                }
             } else if (data.type === 'REJECT') {
                 setLoading(false);
                 alert(data.reason);
@@ -871,7 +932,7 @@
             if (!myNick) return alert("請先設定暱稱。");
             const item = mapData[f][d];
             if (item.v === 1) {
-                if (item.owner === myNick || isHost) {
+                if (item.owner === myNick) {
                     item.v = 0;
                     item.owner = null;
                     item.ownerColor = null;
@@ -966,6 +1027,7 @@
 
         // === 啟動 ===
         renderGrid();
+        els.colorSelect.addEventListener('input', updateMyColorLive);
         const initialHash = window.location.hash.substring(1);
         if (initialHash) {
             els.joinInput.value = initialHash;
